@@ -1,10 +1,11 @@
  #!/usr/bin/env python
 import rospy
 from std_msgs.msg import String
-from test_package_2.simp_sub2 import COMP2
+# from test_package_2.simp_sub2 import COMP2
 
 class COMP1:
     def __init__(self) -> None:
+        self.n = 3
         self.hello_str = ''
         rospy.init_node('listener1', anonymous=True)
         rospy.Subscriber("chatter1", String, self.callback)
@@ -15,7 +16,12 @@ class COMP1:
 
 
     def printHello (self):
-        rospy.loginfo(self.hello_str + " Function 1")
+        self.n = self.n + 1
+        f = self.hello_str + " Function 1" + str(self.n)
+        rospy.loginfo(f)
+        pub = rospy.Publisher('chatter_f', String, queue_size=10)
+        pub.publish(f)
+        
 
     def run(self):
         rate = rospy.Rate(10)
@@ -25,6 +31,6 @@ class COMP1:
 
 if __name__ == '__main__':
     c = COMP1()
-    cp2 = COMP2()
-    cp2.run()
+    # cp2 = COMP2()
+    # cp2.run()
     c.run()
